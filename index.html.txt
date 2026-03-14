@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Onde Tem VNI</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="overlay-auth" class="overlay" onclick="fecharModal()"></div>
+<div id="modal-auth" class="modal">
+  <button class="btn-fechar" onclick="fecharModal()">X</button>
+  <div class="modal-abas">
+    <button id="aba-login" class="aba ativa" onclick="trocarAba('login')">Entrar</button>
+    <button id="aba-cadastro" class="aba" onclick="trocarAba('cadastro')">Cadastrar</button>
+  </div>
+  <form id="form-login" onsubmit="realizarLogin(event)">
+    <h2>Bem-vindo de volta</h2>
+    <label for="login-nome">Nome</label>
+    <input id="login-nome" type="text" placeholder="Seu nome" required>
+    <label for="login-senha">Senha</label>
+    <input id="login-senha" type="password" placeholder="Sua senha" required>
+    <p id="erro-login" class="msg-erro"></p>
+    <button type="submit" class="btn-submit">Entrar</button>
+  </form>
+  <form id="form-cadastro" class="escondido" onsubmit="realizarCadastro(event)">
+    <h2>Criar conta</h2>
+    <label for="cad-nome">Nome <span class="obrigatorio">*</span></label>
+    <input id="cad-nome" type="text" placeholder="Seu nome completo" required>
+    <label for="cad-telefone">Telefone <span class="obrigatorio">*</span></label>
+    <input id="cad-telefone" type="tel" placeholder="(28) 99999-0000" required>
+    <label for="cad-senha">Senha <span class="obrigatorio">*</span></label>
+    <input id="cad-senha" type="password" placeholder="Min. 6 caracteres" required minlength="6">
+    <p id="erro-cadastro" class="msg-erro"></p>
+    <button type="submit" class="btn-submit">Criar conta</button>
+  </form>
+</div>
+
+<div id="overlay-negocio" class="overlay" onclick="fecharModalNegocio()"></div>
+<div id="modal-negocio" class="modal">
+  <button class="btn-fechar" onclick="fecharModalNegocio()">X</button>
+  <form id="form-negocio" onsubmit="salvarNegocio(event)">
+    <h2 id="titulo-negocio">Cadastrar negocio</h2>
+    <label for="neg-nome">Nome <span class="obrigatorio">*</span></label>
+    <input id="neg-nome" type="text" placeholder="Ex: Padaria Central" required>
+    <label for="neg-tipo">Tipo <span class="obrigatorio">*</span></label>
+    <select id="neg-tipo" onchange="alternarCamposTipo()" required>
+      <option value="">Selecione...</option>
+      <option value="loja">Loja</option>
+      <option value="servico">Servico</option>
+    </select>
+    <div id="campo-endereco" class="escondido">
+      <label for="neg-endereco">Endereco <span class="obrigatorio">*</span></label>
+      <input id="neg-endereco" type="text" placeholder="Ex: Rua das Flores, 123">
+    </div>
+    <div id="campo-cidades" class="escondido">
+      <label for="neg-cidades">Cidades atendidas <span class="obrigatorio">*</span></label>
+      <input id="neg-cidades" type="text" placeholder="Ex: VNI, Domingos Martins...">
+    </div>
+    <label for="neg-categoria">Categoria <span class="obrigatorio">*</span></label>
+    <input id="neg-categoria" type="text" placeholder="Ex: Padaria, Mecanica..." required>
+    <label for="neg-descricao">Descricao <span class="obrigatorio">*</span></label>
+    <input id="neg-descricao" type="text" placeholder="O que voce oferece?" required>
+    <label for="neg-telefone">Telefone/WhatsApp <span class="obrigatorio">*</span></label>
+    <input id="neg-telefone" type="tel" placeholder="(28) 99999-0000" required>
+    <div id="campo-horario" class="escondido">
+      <label>Dias de funcionamento</label>
+      <div class="dias-semana">
+        <label><input type="checkbox" name="dia" value="Dom"> Dom</label>
+        <label><input type="checkbox" name="dia" value="Seg"> Seg</label>
+        <label><input type="checkbox" name="dia" value="Ter"> Ter</label>
+        <label><input type="checkbox" name="dia" value="Qua"> Qua</label>
+        <label><input type="checkbox" name="dia" value="Qui"> Qui</label>
+        <label><input type="checkbox" name="dia" value="Sex"> Sex</label>
+        <label><input type="checkbox" name="dia" value="Sab"> Sab</label>
+      </div>
+      <div class="horario-linha">
+        <div>
+          <label for="neg-abertura">Abre</label>
+          <input id="neg-abertura" type="time">
+        </div>
+        <div>
+          <label for="neg-fechamento">Fecha</label>
+          <input id="neg-fechamento" type="time">
+        </div>
+      </div>
+    </div>
+    <div id="campo-maps" class="escondido">
+      <label for="neg-maps">Link do Google Maps</label>
+      <input id="neg-maps" type="url" placeholder="https://maps.app.goo.gl/...">
+    </div>
+    <p id="erro-negocio" class="msg-erro"></p>
+    <button type="submit" class="btn-submit" id="btn-salvar-negocio">Cadastrar negocio</button>
+  </form>
+</div>
+
+<div id="overlay-perfil" class="overlay" onclick="fecharPerfil()"></div>
+<div id="modal-perfil" class="modal">
+  <button class="btn-fechar" onclick="fecharPerfil()">X</button>
+  <h2>Meus cadastros</h2>
+  <div id="perfil-conteudo"></div>
+</div>
+
+<div id="overlay-admin" class="overlay" onclick="fecharPainelAdmin()"></div>
+<div id="modal-admin" class="modal">
+  <button class="btn-fechar" onclick="fecharPainelAdmin()">&#10005;</button>
+  <div class="admin-titulo">&#9881; Painel Administrativo</div>
+  <div class="admin-abas">
+    <button id="admin-aba-stats"     class="admin-aba ativa" onclick="trocarAbaAdmin('stats')">&#128202; Stats</button>
+    <button id="admin-aba-pendentes" class="admin-aba"       onclick="trocarAbaAdmin('pendentes')">&#9203; Pendentes</button>
+    <button id="admin-aba-lojas"     class="admin-aba"       onclick="trocarAbaAdmin('lojas')">&#128722; Lojas</button>
+    <button id="admin-aba-servicos"  class="admin-aba"       onclick="trocarAbaAdmin('servicos')">&#128295; Servicos</button>
+    <button id="admin-aba-usuarios"  class="admin-aba"       onclick="trocarAbaAdmin('usuarios')">&#128101; Usuarios</button>
+  </div>
+  <div id="admin-sec-stats">
+    <div class="admin-stats">
+      <div class="admin-stat-card">
+        <div class="admin-stat-num" id="admin-stat-lojas">0</div>
+        <div class="admin-stat-label">&#128722; Lojas aprovadas</div>
+      </div>
+      <div class="admin-stat-card azul">
+        <div class="admin-stat-num" id="admin-stat-servicos">0</div>
+        <div class="admin-stat-label">&#128295; Servicos aprovados</div>
+      </div>
+      <div class="admin-stat-card laranja">
+        <div class="admin-stat-num" id="admin-stat-pendentes">0</div>
+        <div class="admin-stat-label">&#9203; Pendentes</div>
+      </div>
+      <div class="admin-stat-card roxo">
+        <div class="admin-stat-num" id="admin-stat-usuarios">0</div>
+        <div class="admin-stat-label">&#128101; Usuarios</div>
+      </div>
+    </div>
+  </div>
+  <div id="admin-sec-pendentes" style="display:none">
+    <div id="admin-pendentes"></div>
+  </div>
+  <div id="admin-sec-lojas" style="display:none">
+    <div id="admin-lojas"></div>
+  </div>
+  <div id="admin-sec-servicos" style="display:none">
+    <div id="admin-servicos"></div>
+  </div>
+  <div id="admin-sec-usuarios" style="display:none">
+    <div id="admin-usuarios"></div>
+  </div>
+</div>
+
+<header>
+  <div class="header-topo">
+    <div>
+      <h1>&#128205; Onde Tem VNI</h1>
+      <p>Comercio e Servicos em Venda Nova do Imigrante</p>
+    </div>
+    <div id="user-status">
+      <button id="btn-auth" class="btn-login-header" onclick="abrirModal()">&#128100; Entrar</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <button id="btn-add-negocio" class="btn-add-negocio escondido" onclick="abrirModalNegocio()">
+    + Cadastrar meu negocio
+  </button>
+  <input type="text" id="busca" placeholder="Busque por nome, servico ou produto..." oninput="aplicarFiltros()">
+  <div id="filtros-categoria">
+    <button class="btn-filtro ativo" onclick="filtrarPorTipo('todos', this)">Todos</button>
+    <button class="btn-filtro" onclick="filtrarPorTipo('loja', this)">Lojas</button>
+    <button class="btn-filtro" onclick="filtrarPorTipo('servico', this)">Servicos</button>
+  </div>
+  <div id="contador-resultados"></div>
+  <div id="lista-estabelecimentos"></div>
+</main>
+
+<footer>
+  <p>&#169; 2026 Onde Tem VNI &middot; Venda Nova do Imigrante - ES</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
